@@ -8,12 +8,25 @@ import platform
 import os
 import errno
 
-script_version = '0.1'
+script_version = '0.2'
 script_authors = 'Jason Ramboz'
 script_repo = 'https://github.com/jramboz/wav2polaris'
 
+def _expand_wildcard(pattern: str) -> list[str]:
+    '''Expand wildcards using glob. This is needed when system is Windows or when we later modify args to include a wildcard.'''
+    log = logging.getLogger()
+    log.debug(f'Expanding wildcard: {pattern}')
+    expanded_files = glob.glob(pattern)
+    log.debug(f'Expanded files: {expanded_files}')
+    return expanded_files
+
 def main_func():
     log = logging.getLogger()
+    if not log.hasHandlers():
+            stream = logging.StreamHandler(sys.stdout)
+            #stream.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s: %(message)s'))
+            stream.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
+            log.addHandler(stream)
     
     exit_code = 0
 
@@ -53,11 +66,9 @@ def main_func():
             # for Windows, we need to manually expand any wildcards in the input list
             if platform.system() == 'Windows':
                 log.info('Windows system detected. Expanding any wildcards in file names.')
-                expanded_files = []
+                expanded = []
                 for file in args.files:
-                    expanded_files.extend(glob.glob(file))
-                args.files = expanded_files
-                log.debug(f'Expanded files: {args.files}')
+                    expanded.extend(_expand_wildcard(args.files))
 
             print(f'\nPreparing to convert {str(len(args.files)) + " " if len(args.files)>1 else ""}file{"s" if len(args.files)>1 else ""}')
             
@@ -65,8 +76,13 @@ def main_func():
             verified_files = []
             for file in args.files:
                 try:
-                    if not os.path.isfile(file):
+                    log.debug(f'Checking file: {file}')
+                    if not os.path.exists(file):
                         raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), file)
+                    
+                    if os.path.isdir(file): # if a directory is specified, convert all wav files in that directory
+                        file = os.path.join(file, '*.wav')
+                        args.files.extend(_expand_wildcard(file))
                     else:
                         verified_files.append(file)
                 except FileNotFoundError as e:
