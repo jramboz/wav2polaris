@@ -79,15 +79,15 @@ def main_func():
                         sys.exit(1)
             log.debug(f'Verified {len(verified_files)} file{"s" if len(verified_files)>1 or len(verified_files)==0 else ""}: {verified_files}')
 
+            if not verified_files:
+                exit_code = 1
+                return
+            
             # Convert files
             converted_files = []
             error_files = []
             if args.no_rename:
                 log.info('Skipping file renaming.')
-            
-            if not verified_files:
-                exit_code = 1
-                return
             
             for file in verified_files:
                 if args.no_rename:
