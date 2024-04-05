@@ -25,7 +25,7 @@ on:
         default: '-F, -i wav2polaris.png'
       python_ver:
         description: specific python version you want to use
-        default: '3.12'
+        default: '3.10'
       win_python_arch:
         description: specific python architecture for Windows build
         default: 'x64'
