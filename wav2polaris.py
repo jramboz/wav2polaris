@@ -8,7 +8,7 @@ import platform
 import os
 import errno
 
-script_version = '0.2'
+script_version = '0.3'
 script_authors = 'Jason Ramboz'
 script_repo = 'https://github.com/jramboz/wav2polaris'
 
@@ -55,6 +55,9 @@ def main_func():
     parser.add_argument('-N', '--no-rename',
                         action="store_true",
                         help='do not attempt to rename output files to Polaris standards (e.g., CLASH_1_0.RAW)')
+    parser.add_argument('-o', '--outdir',
+                        action='store', dest='outdir',
+                        help='put output files in specified directory (will be created if it does not exist)')
     
     args = parser.parse_args(args=None if sys.argv[1:] else ['--help'])
 
@@ -98,7 +101,7 @@ def main_func():
             if not verified_files:
                 exit_code = 1
                 return
-            
+
             # Convert files
             converted_files = []
             error_files = []
@@ -106,12 +109,23 @@ def main_func():
                 log.info('Skipping file renaming.')
             
             for file in verified_files:
+                outdir = '' # Empty string instead of None lets us safely use it in functions
+                # Check to see if output dir is specified. Need to do this for each file in case user specified a relative path and files in multiple directories
+                if args.outdir:
+                    if not os.path.isabs(args.outdir): # if relative path is provided, add it to the input file's path
+                        basepath = os.path.dirname(os.path.realpath(file))
+                        outdir = os.path.join(basepath, args.outdir)
+                    else: # absolute path given
+                        outdir = args.outdir
+
                 if args.no_rename:
-                    output = sound.convert_wav_to_polaris_raw(file)
+                    output = sound.convert_wav_to_polaris_raw(file, outdir)
                 else:
                     destination = sound.get_polaris_filename(file)
                     log.debug(f'Auto-matching result: {os.path.basename(file)} -> {destination}')
-                    output = sound.convert_wav_to_polaris_raw(file, destination)
+                    target = os.path.join(outdir, destination)
+                    log.debug(f'Destination output: {target}')
+                    output = sound.convert_wav_to_polaris_raw(file, target)
 
                 if output:
                     log.debug(f'Converted file successfully: {file} -> {output}')
