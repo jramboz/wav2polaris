@@ -16,7 +16,7 @@ on:
         default: 'wav2polaris.py'
       requirements:
         description: path of your requirements.txt file
-        default: 'requirements.txt'
+        default: 'build-requirements.txt'
       options:
         description: > 
           Options to set for pyinstaller command
