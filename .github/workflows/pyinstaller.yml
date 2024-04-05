@@ -26,17 +26,15 @@ on:
       python_ver:
         description: specific python version you want to use
         default: '3.10'
-      win_python_arch:
+      python_arch:
         description: specific python architecture for Windows build
         default: 'x64'
-      mac_python_arch:
-        description: specific python architecture for macOS build
-        default: 'universal2'
+
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   pyinstaller-build-win:
-    runs-on: windows-latest
+    runs-on: [windows-latest, macos-latest]
     steps:
       - name: PyInstaller Action
         uses: Martin005/pyinstaller-action@v1.2.0
@@ -45,18 +43,18 @@ jobs:
           spec: ${{ inputs.spec }}
           requirements: ${{ inputs.requirements }}
           options: ${{ inputs.options }}
-          python_arch: ${{ inputs.win_python_arch }}
-          upload_exe_with_name: 'wav2polaris-win'
-  pyinstaller-build-mac:
-    runs-on: macos-latest
-    steps:
-      - name: PyInstaller Action
-        uses: Martin005/pyinstaller-action@v1.2.0
-        with:
-          python_ver: ${{ inputs.python_ver }}
-          spec: ${{ inputs.spec }}
-          requirements: ${{ inputs.requirements }}
-          options: ${{ inputs.options }}
-          python_arch: ${{ inputs.mac_python_arch }}
-          upload_exe_with_name: 'wav2polaris-mac'
+          python_arch: ${{ inputs.python_arch }}
+          upload_exe_with_name: 'wav2polaris'
+#  pyinstaller-build-mac:
+#    runs-on: macos-latest
+#    steps:
+#      - name: PyInstaller Action
+#        uses: Martin005/pyinstaller-action@v1.2.0
+#        with:
+#          python_ver: ${{ inputs.python_ver }}
+#          spec: ${{ inputs.spec }}
+#          requirements: ${{ inputs.requirements }}
+#          options: ${{ inputs.options }}
+#          python_arch: ${{ inputs.mac_python_arch }}
+#          upload_exe_with_name: 'wav2polaris-mac'
   
