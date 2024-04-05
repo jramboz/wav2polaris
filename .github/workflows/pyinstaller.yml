@@ -34,7 +34,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   pyinstaller-build-win:
-    runs-on: [windows-latest, macos-latest]
+    runs-on: windows-latest
     steps:
       - name: PyInstaller Action
         uses: Martin005/pyinstaller-action@v1.2.0
@@ -44,17 +44,17 @@ jobs:
           requirements: ${{ inputs.requirements }}
           options: ${{ inputs.options }}
           python_arch: ${{ inputs.python_arch }}
-          upload_exe_with_name: 'wav2polaris'
-#  pyinstaller-build-mac:
-#    runs-on: macos-latest
-#    steps:
-#      - name: PyInstaller Action
-#        uses: Martin005/pyinstaller-action@v1.2.0
-#        with:
-#          python_ver: ${{ inputs.python_ver }}
-#          spec: ${{ inputs.spec }}
-#          requirements: ${{ inputs.requirements }}
-#          options: ${{ inputs.options }}
-#          python_arch: ${{ inputs.mac_python_arch }}
-#          upload_exe_with_name: 'wav2polaris-mac'
+          upload_exe_with_name: 'wav2polaris-win'
+  pyinstaller-build-mac:
+    runs-on: macos-latest
+    steps:
+      - name: PyInstaller Action
+        uses: Martin005/pyinstaller-action@v1.2.0
+        with:
+          python_ver: ${{ inputs.python_ver }}
+          spec: ${{ inputs.spec }}
+          requirements: ${{ inputs.requirements }}
+          options: ${{ inputs.options }}
+          python_arch: ${{ inputs.python_arch }}
+          upload_exe_with_name: 'wav2polaris-mac'
   
