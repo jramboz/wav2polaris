@@ -8,7 +8,7 @@ import platform
 import os
 import errno
 
-script_version = '0.4'
+script_version = '0.3'
 script_authors = 'Jason Ramboz'
 script_repo = 'https://github.com/jramboz/wav2polaris'
 
