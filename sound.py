@@ -75,37 +75,42 @@ class _Effect_RE(object):
         self.searches = searches
         self.polaris_sub = polaris_sub
 
+# Regex patterns to use when auto-renaming. Polaris names are included for various edge cases.
 _patterns = {
     'clash': _Effect_RE(
         searches=[
             r'^cla*sh0*(\d+)\.wav$', # CFX, Proffie, Verso
-            r'^clash \((\d*)\)\.wav$' # Xenopixel
+            r'^clash \((\d*)\)\.wav$', # Xenopixel
+            r'^clash_(\d*)_0\.wav$' # Polaris
         ],
         polaris_sub=r'CLASH_\1_0.RAW'
     ),
     'hum': _Effect_RE(
         searches=[
             r'^hum\w*?0*(\d*)\.wav$', # CFX, Proffie, Verso
-            r'^hum \((\d*)\)\.wav$' # Xenopixel
+            r'^hum \((\d*)\)\.wav$', # Xenopixel
+            r'^hum_(\d*)\.wav$' # Polaris
         ],
         # lambda is necessary because some fonts just have one "hum.wav" with no number
         polaris_sub=lambda m: f'HUM_{int(m.group(1))-1}.RAW' if m.group(1) else 'HUM_0.RAW'
     ),
     'poweroff': _Effect_RE(
         searches=[
-            r'^po*we*roff(\d*)\.wav', # CFX
-            r'^in0*(\d*)\.wav', # Proffie
-            r'^off(\d*)\.wav', # Verso
-            r'^in \((\d*)\)\.wav' # Xenopixel
+            r'^po*we*roff(\d*)\.wav$', # CFX
+            r'^in0*(\d*)\.wav$', # Proffie
+            r'^off(\d*)\.wav$', # Verso
+            r'^in \((\d*)\)\.wav$', # Xenopixel
+            r'^poweroff_(\d*)\.wav$' # Polaris
         ],
         polaris_sub=lambda m: f'POWEROFF_{int(m.group(1))-1}.RAW' if m.group(1) else 'POWEROFF_0.RAW'
     ),
     'poweron': _Effect_RE(
         searches=[
-            r'^poweron(\d*)\.wav', # CFX
-            r'^out0*(\d*)\.wav', # Proffie
-            r'^on(\d*)\.wav', # Verso
-            r'^out \((\d*)\)\.wav' # Xenopixel
+            r'^poweron(\d*)\.wav$', # CFX
+            r'^out0*(\d*)\.wav$', # Proffie
+            r'^on(\d*)\.wav$', # Verso
+            r'^out \((\d*)\)\.wav$', # Xenopixel
+            r'^poweron_(\d*)\.wav$' # Polaris
         ],
         polaris_sub=lambda m: f'POWERON_{int(m.group(1))-1}.RAW' if m.group(1) else 'POWERON_0.RAW'
     ),
@@ -113,7 +118,8 @@ _patterns = {
         searches=[
             r'^hswing(\d*)\.wav$', # CFX
             r'^swingh0*(\d*)\.wav$', # Proffie, Verso
-            r'^swingh \((\d*)\)\.wav$' # Xenopixel
+            r'^swingh \((\d*)\)\.wav$', # Xenopixel
+            r'^smoothswingh_(\d*)_0\.wav$' # Polaris
         ],
         polaris_sub=r'SMOOTHSWINGH_\1_0.RAW'
     ),
@@ -121,14 +127,16 @@ _patterns = {
         searches=[
             r'^lswing(\d*)\.wav$', # CFX
             r'^swingl0*(\d*)\.wav$', # Proffie, Verso
-            r'^swingl \((\d*)\)\.wav$' # Xenopixel
+            r'^swingl \((\d*)\)\.wav$', # Xenopixel
+            r'^smoothswingl_(\d*)_0\.wav$' # Polaris
         ],
         polaris_sub=r'SMOOTHSWINGL_\1_0.RAW'
     ),
     'swing': _Effect_RE(
         searches=[
             r'^swi*ng0*(\d*)\.wav$', # CFX, Proffie. No standard swings for Xenopixel
-            r'^aswing(\d*)\.wav$' # Verso. Technically these are swing accents, but they'll do.
+            r'^aswing(\d*)\.wav$', # Verso. Technically these are swing accents, but they'll do.
+            r'^swing_(\d*)_0\.wav$'
         ],
         polaris_sub=r'SWING_\1_0.RAW'
     ),
