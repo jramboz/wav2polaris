@@ -7,16 +7,23 @@ import logging
 import re
 import typing
 
-def convert_wav_to_polaris_raw(input: str, output: str = None) -> str | None:
+def convert_wav_to_polaris_raw(input: str, output: str = None, nxt_trim: bool = False) -> str | None:
     '''Converts a wav file to a raw file with the appropriate parameters for use in a Polaris Anima.
     If no output path/filename is specified, it will use the input filename with '.RAW' in the same directory.
-    Returns filename (with path) if successful. Returns None if failed.'''
+    Returns filename (with path) if successful. Returns None if failed.
+    
+    If nxt_trim is True, output files will be trimmed to NXT-compatible lenghts. Note that this will only work with the standard naming scheme.'''
     _log = logging.getLogger('Sound')
 
     # Polaris compatible sound specifications
     _SAMPLE_RATE = 44100
     _CHANNELS = 1 # mono
     _BIT_DEPTH = 2 # 16-bit
+
+    # NXT-compatible sound lengths (in milliseconds)
+    _NXT_HUM_LENGTH = 19.9 * 1000
+    _NXT_SWING_LENGTH = 5.9 * 1000
+    _NXT_POWERON_LENGTH = 2.9 * 1000
 
     try:
         #open the file
@@ -54,6 +61,22 @@ def convert_wav_to_polaris_raw(input: str, output: str = None) -> str | None:
         # if output is a directory with no filename, append the default filename
         if os.path.isdir(output):
             output = os.path.join(output, os.path.splitext(os.path.basename(input))[0] + '.RAW')
+
+        # if requested, trim files to length that works with NXTs
+        if nxt_trim:
+            # figure out effect type based on filename. Will only work with default naming scheme
+            # I might make this more robust using regex patters to match any filename, but that will come later.
+            if "HUM_" in output:
+                trim_length = _NXT_HUM_LENGTH
+            elif "SMOOTHSWING" in output:
+                trim_length = _NXT_SWING_LENGTH
+            elif "POWERON" in output:
+                trim_length = _NXT_POWERON_LENGTH
+            else:
+                trim_length = 0
+            # trim the file
+            if trim_length:
+                sound = sound[:trim_length]
 
         # write output file
         _log.debug(f'Writing output file: {output}')
