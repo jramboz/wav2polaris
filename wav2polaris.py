@@ -7,6 +7,7 @@ import sys
 import platform
 import os
 import errno
+import utils
 
 script_version = '0.3'
 script_authors = 'Jason Ramboz'
@@ -58,6 +59,9 @@ def main_func():
     parser.add_argument('-o', '--outdir',
                         action='store', dest='outdir',
                         help='put output files in specified directory (will be created if it does not exist)')
+    parser.add_argument('-E', '--exclude-unmatched',
+                        action="store_true",
+                        help='do not process files that cannot be matched to a standard Polaris filename')
     
     args = parser.parse_args(args=None if sys.argv[1:] else ['--help'])
 
@@ -123,6 +127,10 @@ def main_func():
                 else:
                     destination = sound.get_polaris_filename(file)
                     log.debug(f'Auto-matching result: {os.path.basename(file)} -> {destination}')
+                    if args.exclude_unmatched:
+                        if not utils.is_polaris_filename(destination):
+                            log.debug(f'Skipping unmatched file: {os.path.basename(file)}')
+                            continue # Go to the next file
                     target = os.path.join(outdir, destination)
                     log.debug(f'Destination output: {target}')
                     output = sound.convert_wav_to_polaris_raw(file, target)
