@@ -56,6 +56,9 @@ def main_func():
     parser.add_argument('-N', '--no-rename',
                         action="store_true",
                         help='do not attempt to rename output files to Polaris standards (e.g., CLASH_1_0.RAW)')
+    parser.add_argument('-T', '--trim',
+                        action="store_true",
+                        help='Trim output files to NXT-compatible lengths')
     parser.add_argument('-o', '--outdir',
                         action='store', dest='outdir',
                         help='put output files in specified directory (will be created if it does not exist)')
@@ -123,7 +126,7 @@ def main_func():
                         outdir = args.outdir
 
                 if args.no_rename:
-                    output = sound.convert_wav_to_polaris_raw(file, outdir)
+                    output = sound.convert_wav_to_polaris_raw(file, outdir, args.trim)
                 else:
                     destination = sound.get_polaris_filename(file)
                     log.debug(f'Auto-matching result: {os.path.basename(file)} -> {destination}')
@@ -133,7 +136,7 @@ def main_func():
                             continue # Go to the next file
                     target = os.path.join(outdir, destination)
                     log.debug(f'Destination output: {target}')
-                    output = sound.convert_wav_to_polaris_raw(file, target)
+                    output = sound.convert_wav_to_polaris_raw(file, target, args.trim)
 
                 if output:
                     log.debug(f'Converted file successfully: {file} -> {output}')
