@@ -7,7 +7,7 @@ import logging
 import re
 import typing
 
-def convert_wav_to_polaris_raw(input: str, output: str = None, nxt_trim: bool = False) -> str | None:
+def convert_wav_to_polaris_raw(input: str, output: str | None = None, nxt_trim: bool = False) -> str | None:
     '''Converts a wav file to a raw file with the appropriate parameters for use in a Polaris Anima.
     If no output path/filename is specified, it will use the input filename with '.RAW' in the same directory.
     Returns filename (with path) if successful. Returns None if failed.
@@ -76,7 +76,7 @@ def convert_wav_to_polaris_raw(input: str, output: str = None, nxt_trim: bool = 
                 trim_length = 0
             # trim the file
             if trim_length:
-                sound = sound[:trim_length]
+                sound = sound[:trim_length] # type: ignore
 
         # write output file
         _log.debug(f'Writing output file: {output}')
