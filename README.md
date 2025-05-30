@@ -6,9 +6,11 @@
 ## Features
 - Automatically converts the input `.wav` to the correct sound parameters for Polaris Anima
 - Automatically translate file names from various common lightsaber sound font formats (CFX, Proffie, Verso, Xenopixel) to Polaris Anima standard
-- Can process a single file or mutliple files at once
-- Can process all `.wav` files in a directory/folder
+- Optionally ignore files that can't be matched to a Polaris standard filename (e.g., to exclude things like stabs, drags, force, and other effects that Polaris Anima doesn't use.)
+- Process a single file or mutliple files at once
+- Process all `.wav` files in a directory/folder
 - Supports File Explorer drag-and-drop or command-line usage
+- Optionally trim sound files to Anima NXT-compatible lengths
 
 ## Program Usage
 ### Drag-and-Drop
@@ -17,10 +19,10 @@ Download the [pre-built executable](https://github.com/jramboz/wav2polaris/relea
 ### Command Line
 Download the [pre-built executable](https://github.com/jramboz/wav2polaris/releases) for your OS. Place it in the folder with your `.wav` files or somewhere in your environment's PATH.
 
-Alternately, you can clone the [GitHub repository](https://github.com/jramboz/wav2polaris/), install the requirements with `pip3 install -r requirements.txt`, and invoke with Python >= 3.10: `python3 wav2polaris.py`
+Alternately, if you have Python3 installed on your system, you can install with the command: `pip install wav2polaris`.
 
 ```
-usage: wav2polaris [-h] [-v] [-s | -w] [-c] [-D] [-N] [-o OUTDIR] [files ...]
+usage: wav2polaris [-h] [-v] [-s | -w] [-c] [-D] [-N] [-T] [-o OUTDIR] [-E] [files ...]
 
 A utility for converting lightsaber sound font .wav files to .RAW files for Polaris Anima sabers.
 
@@ -33,10 +35,13 @@ options:
   -s, --silent          exit without waiting for keypress
   -w, --wait            wait for keypress before exiting (default)
   -c, --continue-on-file-not-found
-                        if one or more specified files do not exist, continue processing the remaining files (otherwise program will exit)
+                        if one or more specified files do not exist, continue processing the remaining files (otherwise
+                        program will exit)
   -D, --debug           Show debugging information
   -N, --no-rename       do not attempt to rename output files to Polaris standards (e.g., CLASH_1_0.RAW)
-  -o OUTDIR, --outdir OUTDIR
-                        put output files in specified directory (will be created if it does not exist)
+  -T, --trim            Trim output files to NXT-compatible lengths
+  -o, --outdir OUTDIR   put output files in specified directory (will be created if it does not exist)
+  -E, --exclude-unmatched
+                        do not process files that cannot be matched to a standard Polaris filename
 ```
 
