@@ -2,5 +2,7 @@
 # specify this file when using the github pyinstaller action
 pyinstaller
 Pillow
+build
+setuptools
 
 -r requirements.txt

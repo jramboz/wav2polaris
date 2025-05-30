@@ -1,15 +1,20 @@
 import argparse
 from getch import pause_exit
 import glob
-import sound
 import logging
 import sys
 import platform
 import os
 import errno
-import utils
+if __name__ == "__main__":
+    import utils
+    import sound
+else:
+    from . import utils
+    from . import sound
 
-script_version = '0.3'
+
+script_version = '0.3.0'
 script_authors = 'Jason Ramboz'
 script_repo = 'https://github.com/jramboz/wav2polaris'
 

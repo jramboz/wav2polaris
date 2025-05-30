@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wav2polaris"
+version = "0.3.0"
+description = "Python program for converting lightsaber sound font .wav files to .RAW files for Polaris Anima sabers"
+readme = "README.md"
+authors = [{name = "Jason Ramboz", email = "jramboz@gmail.com"}]
+license = {file = "COPYING"}
+classifiers = [
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Development Status :: 4 - Beta",
+]
+keywords = ["polaris", "ludosport", "lightsabers", "opencore"]
+dependencies = [
+    "py-getch >= 1.0.1",
+    "pydub >= 0.25.1",
+    "audioop-lts >= 0.2.1"
+]
+requires-python = ">=3.9"
+
+[project.urls]
+Homepage = "https://github.com/jramboz/wav2polaris"
+
+[project.scripts]
+wav2polaris = "wav2polaris.wav2polaris:main_func"
