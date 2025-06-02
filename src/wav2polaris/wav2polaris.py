@@ -63,7 +63,7 @@ def main_func():
                         help='do not attempt to rename output files to Polaris standards (e.g., CLASH_1_0.RAW)')
     parser.add_argument('-T', '--trim',
                         action="store_true",
-                        help='Trim output files to NXT-compatible lengths')
+                        help='Trim output files to NXT-compatible lengths (Experimental)')
     parser.add_argument('-o', '--outdir',
                         action='store', dest='outdir',
                         help='put output files in specified directory (will be created if it does not exist)')
