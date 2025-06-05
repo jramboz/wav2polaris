@@ -16,7 +16,7 @@ jobs:
           python_ver: '3.13'
           spec: 'src/wav2polaris/wav2polaris.py'
           requirements: 'build-requirements.txt'
-          options: --onefile, --name "wav2polaris", --icon wav2polaris.png, --collect-submodules wav2polaris
+          options: --onefile, --name "wav2polaris", --icon wav2polaris.png, --collect-data wav2polaris
           upload_exe_with_name: 'wav2polaris-win'
   pyinstaller-build-mac:
     runs-on: macos-latest
