@@ -13,20 +13,32 @@ jobs:
       - name: PyInstaller Action
         uses: sayyid5416/pyinstaller@v1
         with:
-          python_ver: '3.13'
-          spec: 'src/wav2polaris/wav2polaris.py'
+          python_ver: '3.13.2'
+          spec: 'wav2polaris-win.spec'
           requirements: 'build-requirements.txt'
-          options: --onefile, --name "wav2polaris", --icon wav2polaris.png, --collect-submodules wav2polaris
+          #options: --onefile, --name "wav2polaris", --icon wav2polaris.png, --collect-submodules wav2polaris
           upload_exe_with_name: 'wav2polaris-win'
-  pyinstaller-build-mac:
+  pyinstaller-build-mac-arm64:
     runs-on: macos-latest
     steps:
       - name: PyInstaller Action
         uses: sayyid5416/pyinstaller@v1
         with:
-          python_ver: '3.13'
-          spec: 'src/wav2polaris/wav2polaris.py'
+          python_ver: '3.13.2'
+          spec: 'wav2polaris-arm64.spec'
           requirements: 'build-requirements.txt'
-          python_arch: 'universal2'
-          options: --onefile, --name "wav2polaris", --icon wav2polaris.png
-          upload_exe_with_name: 'wav2polaris-mac'
+          python_arch: 'arm64'
+          #options: --onefile, --name "wav2polaris", --icon wav2polaris.png
+          upload_exe_with_name: 'wav2polaris-mac-arm64'
+  pyinstaller-build-mac-x86_64:
+    runs-on: macos-latest
+    steps:
+      - name: PyInstaller Action
+        uses: sayyid5416/pyinstaller@v1
+        with:
+          python_ver: '3.13.2'
+          spec: 'wav2polaris-arm64.spec'
+          requirements: 'build-requirements.txt'
+          python_arch: 'x86_64'
+          #options: --onefile, --name "wav2polaris", --icon wav2polaris.png
+          upload_exe_with_name: 'wav2polaris-mac-x86_64'
