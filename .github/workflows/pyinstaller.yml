@@ -51,16 +51,15 @@ jobs:
         uses: actions/download-artifact@v4
         id: download-artifacts
         with:
-          path: ./working-dir
           pattern: wav2polaris-mac-*
           merge-multiple: true
       - name: Unzip Artifacts
-        working-directory: ./working-dir
         run: |
+          pwd
+          ls -l
           unzip wav2polaris-mac-arm64.zip
           unzip wav2polaris-mac-x86_64.zip
       - name: Combine into Universal Binary
-        working-directory: ./working-dir
         run: lipo -create wav2polaris-x86_64 wav2polaris-arm64 -output wav2polaris
       - name: Upload Universal Binary
         uses: actions/upload-artifact@v4
