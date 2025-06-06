@@ -39,6 +39,6 @@ jobs:
           python_ver: '3.13.2'
           spec: 'wav2polaris-arm64.spec'
           requirements: 'build-requirements.txt'
-          python_arch: 'x86_64'
+          python_arch: 'x64'
           #options: --onefile, --name "wav2polaris", --icon wav2polaris.png
           upload_exe_with_name: 'wav2polaris-mac-x86_64'
