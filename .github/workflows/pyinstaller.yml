@@ -53,7 +53,7 @@ jobs:
           pattern: wav2polaris-mac-*
           merge-multiple: true
       - name: Unzip Artifacts
-        run: unzip wav2polaris-mac-\*.zip
+        run: unzip wav2polaris-mac-*.zip
       - name: Combine into Universal Binary
         run: lipo -create wav2polaris-x86_64 wav2polaris-arm64 -output wav2polaris
       - name: Upload Universal Binary
