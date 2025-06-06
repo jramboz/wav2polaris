@@ -37,7 +37,7 @@ jobs:
         uses: sayyid5416/pyinstaller@v1
         with:
           python_ver: '3.13.2'
-          spec: 'wav2polaris-arm64.spec'
+          spec: 'wav2polaris-x86_64.spec'
           requirements: 'build-requirements.txt'
           python_arch: 'x64'
           #options: --onefile, --name "wav2polaris", --icon wav2polaris.png
