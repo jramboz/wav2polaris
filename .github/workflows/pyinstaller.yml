@@ -31,7 +31,7 @@ jobs:
           #options: --onefile, --name "wav2polaris", --icon wav2polaris.png
           upload_exe_with_name: 'wav2polaris-mac-arm64'
   pyinstaller-build-mac-x86_64:
-    runs-on: macos-latest
+    runs-on: macos-13
     steps:
       - name: PyInstaller Action
         uses: sayyid5416/pyinstaller@v1
