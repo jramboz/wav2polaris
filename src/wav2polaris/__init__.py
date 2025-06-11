@@ -7,4 +7,4 @@ from .utils import is_polaris_filename
 
 __all__ = ["sound", "utils"]
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"

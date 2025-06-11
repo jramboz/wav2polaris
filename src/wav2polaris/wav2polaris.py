@@ -14,7 +14,7 @@ else:
     from . import sound
 
 
-script_version = '0.3.0'
+script_version = '0.4.0'
 script_authors = 'Jason Ramboz'
 script_repo = 'https://github.com/jramboz/wav2polaris'
 
