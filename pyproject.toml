@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "wav2polaris"
-version = "0.4.0"
+version = "0.4.1"
 description = "Python program for converting lightsaber sound font .wav files to .RAW files for Polaris Anima sabers"
 readme = "README.md"
 authors = [{name = "Jason Ramboz", email = "jramboz@gmail.com"}]
