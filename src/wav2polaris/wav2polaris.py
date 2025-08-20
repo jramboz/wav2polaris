@@ -83,7 +83,7 @@ def main_func():
                 log.info('Windows system detected. Expanding any wildcards in file names.')
                 expanded = []
                 for file in args.files:
-                    expanded.extend(_expand_wildcard(args.files))
+                    expanded.extend(_expand_wildcard(file))
 
             print(f'\nPreparing to convert {str(len(args.files)) + " " if len(args.files)>1 else ""}file{"s" if len(args.files)>1 else ""}')
             
