@@ -7,8 +7,8 @@ import platform
 import os
 import errno
 if __name__ == "__main__":
-    import utils
-    import sound
+    import utils  # ty:ignore[unresolved-import]
+    import sound  # ty:ignore[unresolved-import]
 else:
     from . import utils
     from . import sound
