@@ -2,10 +2,27 @@ import warnings
 with warnings.catch_warnings(): #pydub prints a warning if ffmpeg or avlib aren't installed, but we don't care
     warnings.simplefilter('ignore')
     from pydub import AudioSegment
+    # from pydub.silence import detect_leading_silence
 import os
 import logging
 import re
 import typing
+
+# Created this to trim silence from the beginning and end, but ended up deciding not to use this.
+# This was part of trying to determine whether the silence was causing (even partly) the anima
+# lockups. I ended up finding that it was not the determining factor, so I decided not to
+# keep it. I may add it in later as an option.
+# def trim_edges(sound, silence_threshold=-40.0):
+#     # Function to find where leading silence ends
+#     def trim_start(audio):
+#         start_trim = detect_leading_silence(audio, silence_threshold=silence_threshold)
+#         return audio[start_trim:]
+
+#     # Trim the front
+#     trimmed = trim_start(sound)
+#     # Reverse, trim the front (which is the original back), and reverse back
+#     trimmed = trim_start(trimmed.reverse()).reverse()
+#     return trimmed
 
 def convert_wav_to_polaris_raw(input: str, output: str | None = None, nxt_trim: bool = False) -> str | None:
     '''Converts a wav file to a raw file with the appropriate parameters for use in a Polaris Anima.
@@ -76,7 +93,10 @@ def convert_wav_to_polaris_raw(input: str, output: str | None = None, nxt_trim: 
                 trim_length = 0
             # trim the file
             if trim_length:
-                sound = sound[:trim_length] # type: ignore
+                sound = sound[:trim_length]
+
+        # trim silence from beginning and end
+        # sound = trim_edges(sound)
 
         # write output file
         _log.debug(f'Writing output file: {output}')
