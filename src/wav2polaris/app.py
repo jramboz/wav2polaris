@@ -10,7 +10,7 @@ from wav2polaris import utils
 from wav2polaris import sound
 
 
-script_version = '0.4.1'
+script_version = '0.5.0'
 script_authors = 'Jason Ramboz'
 script_repo = 'https://github.com/jramboz/wav2polaris'
 
