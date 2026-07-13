@@ -7,8 +7,8 @@ import os
 import logging
 import re
 import typing
-from wav2polaris import humfix
-from wav2polaris import utils
+from . import humfix
+from . import utils
 
 # Created this to trim silence from the beginning and end, but ended up deciding not to use this.
 # This was part of trying to determine whether the silence was causing (even partly) the anima
