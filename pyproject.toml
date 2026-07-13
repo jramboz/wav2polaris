@@ -19,7 +19,8 @@ keywords = ["polaris", "ludosport", "lightsabers", "opencore"]
 dependencies = [
     "py-getch >= 1.0.1",
     "pydub >= 0.25.1",
-    "audioop-lts >= 0.2.1"
+    "audioop-lts >= 0.2.1",
+    "numpy >= 2.0.0"
 ]
 requires-python = ">=3.10"
 
