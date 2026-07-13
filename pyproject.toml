@@ -28,4 +28,4 @@ requires-python = ">=3.10"
 Homepage = "https://github.com/jramboz/wav2polaris"
 
 [project.scripts]
-wav2polaris = "wav2polaris.wav2polaris:main_func"
+wav2polaris = "wav2polaris.app:main_func"
