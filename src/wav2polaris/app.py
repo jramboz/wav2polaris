@@ -6,12 +6,12 @@ import sys
 import platform
 import os
 import errno
-if __name__ == "__main__":
-    import utils  # ty:ignore[unresolved-import]
-    import sound  # ty:ignore[unresolved-import]
-else:
-    from . import utils
-    from . import sound
+# if __name__ == "__main__":
+#     import utils  # ty:ignore[unresolved-import]
+#     import sound  # ty:ignore[unresolved-import]
+# else:
+from wav2polaris import utils
+from wav2polaris import sound
 
 
 script_version = '0.4.1'
@@ -33,6 +33,7 @@ def main_func():
             #stream.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s: %(message)s'))
             stream.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
             log.addHandler(stream)
+    log.setLevel(logging.INFO)
     
     exit_code = 0
 
@@ -63,7 +64,10 @@ def main_func():
                         help='do not attempt to rename output files to Polaris standards (e.g., CLASH_1_0.RAW)')
     parser.add_argument('-T', '--trim',
                         action="store_true",
-                        help='Trim output files to NXT-compatible lengths (Experimental)')
+                        help='Trim hum files to NXT-friendly length')
+    parser.add_argument('-H', '--humfix',
+                        action='store_true',
+                        help='Attempt to repair hum files that may cause NXTs to lock up (experimental)')
     parser.add_argument('-o', '--outdir',
                         action='store', dest='outdir',
                         help='put output files in specified directory (will be created if it does not exist)')
@@ -131,7 +135,7 @@ def main_func():
                         outdir = args.outdir
 
                 if args.no_rename:
-                    output = sound.convert_wav_to_polaris_raw(file, outdir, args.trim)
+                    output = sound.convert_wav_to_polaris_raw(file, outdir, args.trim, args.humfix)
                 else:
                     destination = sound.get_polaris_filename(file)
                     log.debug(f'Auto-matching result: {os.path.basename(file)} -> {destination}')
@@ -141,7 +145,7 @@ def main_func():
                             continue # Go to the next file
                     target = os.path.join(outdir, destination)
                     log.debug(f'Destination output: {target}')
-                    output = sound.convert_wav_to_polaris_raw(file, target, args.trim)
+                    output = sound.convert_wav_to_polaris_raw(file, target, args.trim, args.humfix)
 
                 if output:
                     log.debug(f'Converted file successfully: {file} -> {output}')

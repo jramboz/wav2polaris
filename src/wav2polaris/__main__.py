@@ -1,4 +1,4 @@
-from . import wav2polaris
+from . import app
 
 if __name__ == "__main__":
-    wav2polaris.main_func()
+    app.main_func()
