@@ -6,10 +6,6 @@ import sys
 import platform
 import os
 import errno
-# if __name__ == "__main__":
-#     import utils  # ty:ignore[unresolved-import]
-#     import sound  # ty:ignore[unresolved-import]
-# else:
 from wav2polaris import utils
 from wav2polaris import sound
 
