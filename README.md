@@ -42,6 +42,7 @@ options:
   -N, --no-rename       do not attempt to rename output files to Polaris standards (e.g., CLASH_1_0.RAW)
   -T, --trim            Trim hum files to NXT-friendly length
   -H, --humfix          Attempt to repair hum files that may cause NXTs to lock up (experimental)
+  -o, --outdir OUTDIR   put output files in specified directory (will be created if it does not exist)
   -E, --exclude-unmatched
                         do not process files that cannot be matched to a standard Polaris filename
 ```
