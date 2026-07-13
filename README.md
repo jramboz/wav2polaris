@@ -10,7 +10,8 @@
 - Process a single file or mutliple files at once
 - Process all `.wav` files in a directory/folder
 - Supports File Explorer drag-and-drop or command-line usage
-- Optionally trim sound files to Anima NXT-compatible lengths (Experimental)
+- Optionally trim long hum files to an Anima-friendly length
+- Detect and repair hum files that are likely to cause lockups in Anima NXTs (experimental)
 
 ## Program Usage
 ### Drag-and-Drop
@@ -39,8 +40,8 @@ options:
                         program will exit)
   -D, --debug           Show debugging information
   -N, --no-rename       do not attempt to rename output files to Polaris standards (e.g., CLASH_1_0.RAW)
-  -T, --trim            Trim output files to NXT-compatible lengths (Experimental)
-  -o, --outdir OUTDIR   put output files in specified directory (will be created if it does not exist)
+  -T, --trim            Trim hum files to NXT-friendly length
+  -H, --humfix          Attempt to repair hum files that may cause NXTs to lock up (experimental)
   -E, --exclude-unmatched
                         do not process files that cannot be matched to a standard Polaris filename
 ```

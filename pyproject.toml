@@ -19,7 +19,8 @@ keywords = ["polaris", "ludosport", "lightsabers", "opencore"]
 dependencies = [
     "py-getch >= 1.0.1",
     "pydub >= 0.25.1",
-    "audioop-lts >= 0.2.1"
+    "audioop-lts >= 0.2.1",
+    "numpy >= 2.0.0"
 ]
 requires-python = ">=3.10"
 
@@ -27,4 +28,4 @@ requires-python = ">=3.10"
 Homepage = "https://github.com/jramboz/wav2polaris"
 
 [project.scripts]
-wav2polaris = "wav2polaris.wav2polaris:main_func"
+wav2polaris = "wav2polaris.app:main_func"

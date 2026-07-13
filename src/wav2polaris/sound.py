@@ -2,17 +2,37 @@ import warnings
 with warnings.catch_warnings(): #pydub prints a warning if ffmpeg or avlib aren't installed, but we don't care
     warnings.simplefilter('ignore')
     from pydub import AudioSegment
+    # from pydub.silence import detect_leading_silence
 import os
 import logging
 import re
 import typing
+from . import humfix
+from . import utils
 
-def convert_wav_to_polaris_raw(input: str, output: str | None = None, nxt_trim: bool = False) -> str | None:
+# Created this to trim silence from the beginning and end, but ended up deciding not to use this.
+# This was part of trying to determine whether the silence was causing (even partly) the anima
+# lockups. I ended up finding that it was not the determining factor, so I decided not to
+# keep it. I may add it in later as an option.
+# def trim_edges(sound, silence_threshold=-40.0):
+#     # Function to find where leading silence ends
+#     def trim_start(audio):
+#         start_trim = detect_leading_silence(audio, silence_threshold=silence_threshold)
+#         return audio[start_trim:]
+
+#     # Trim the front
+#     trimmed = trim_start(sound)
+#     # Reverse, trim the front (which is the original back), and reverse back
+#     trimmed = trim_start(trimmed.reverse()).reverse()
+#     return trimmed
+
+def convert_wav_to_polaris_raw(input: str, output: str | None = None, nxt_trim: bool = False, apply_humfix: bool = False) -> str | None:
     '''Converts a wav file to a raw file with the appropriate parameters for use in a Polaris Anima.
     If no output path/filename is specified, it will use the input filename with '.RAW' in the same directory.
     Returns filename (with path) if successful. Returns None if failed.
     
-    If nxt_trim is True, output files will be trimmed to NXT-compatible lenghts. Note that this will only work with the standard naming scheme.'''
+    If nxt_trim is True, hum files will be trimmed to an NXT-friendly length. Note that this will only work with the standard naming scheme.
+    If apply_humfix is true, it will attempt to repair hums that could cause NXTs to lock up.'''
     _log = logging.getLogger('Sound')
 
     # Polaris compatible sound specifications
@@ -21,9 +41,12 @@ def convert_wav_to_polaris_raw(input: str, output: str | None = None, nxt_trim: 
     _BIT_DEPTH = 2 # 16-bit
 
     # NXT-compatible sound lengths (in milliseconds)
-    _NXT_HUM_LENGTH = 19.9 * 1000
-    _NXT_SWING_LENGTH = 5.9 * 1000
-    _NXT_POWERON_LENGTH = 2.9 * 1000
+    _NXT_HUM_LENGTH = 20 * 1000
+    # _NXT_SWING_LENGTH = 5.9 * 1000
+    # _NXT_POWERON_LENGTH = 2.9 * 1000
+    # After further investigation, the sound length does not seem to be a determinative factor.
+    # I'm still going to (optionally) trim the Hum because I think it's more space efficient.
+    # I may revisit this later.
 
     try:
         #open the file
@@ -62,21 +85,40 @@ def convert_wav_to_polaris_raw(input: str, output: str | None = None, nxt_trim: 
         if os.path.isdir(output):
             output = os.path.join(output, os.path.splitext(os.path.basename(input))[0] + '.RAW')
 
-        # if requested, trim files to length that works with NXTs
+        # if requested, trim files to length that works with NXTs (but see note above)
+        # Update: if we stay with trimming only hums, this could be folded into the next check below.
         if nxt_trim:
             # figure out effect type based on filename. Will only work with default naming scheme
             # I might make this more robust using regex patters to match any filename, but that will come later.
             if "HUM_" in output:
                 trim_length = _NXT_HUM_LENGTH
-            elif "SMOOTHSWING" in output:
-                trim_length = _NXT_SWING_LENGTH
-            elif "POWERON" in output:
-                trim_length = _NXT_POWERON_LENGTH
+            # elif "SMOOTHSWING" in output:
+            #     trim_length = _NXT_SWING_LENGTH
+            # elif "POWERON" in output:
+            #     trim_length = _NXT_POWERON_LENGTH
             else:
                 trim_length = 0
             # trim the file
             if trim_length:
-                sound = sound[:trim_length] # type: ignore
+                sound = sound[:trim_length]
+
+        # Special processing for hum files to avoid NXT lockups.
+        # Check whether or not the file is likely safe and warn the user.
+        # User always gets the warning if file is likely unsafe, but fix is
+        # only applied if specifically requested.
+        predicted_safe = humfix.check_parity(sound)["predicted_safe"]
+        is_hum = utils.is_hum(os.path.basename(output))
+        if is_hum and predicted_safe:
+            _log.debug("Hum file is likely safe for Anima NXT.")
+        elif is_hum and not predicted_safe:
+            _log.warning("Hum file is likely to cause problems with Anima NXT.")
+            # Apply hum fix if requested.
+            if apply_humfix:
+                _log.info(f"Applying hum fix to file {input}")
+                sound = humfix.repair_segment(sound)
+
+        # trim silence from beginning and end
+        # sound = trim_edges(sound)
 
         # write output file
         _log.debug(f'Writing output file: {output}')
@@ -88,6 +130,7 @@ def convert_wav_to_polaris_raw(input: str, output: str | None = None, nxt_trim: 
         return None
 
 # This next bit is to attempt to automatically translate source sound font names to Polaris default names using regexps.
+# TODO: refactor this into utils.py. It makes more sense there.
 class _Effect_RE(object):
     '''Holds regular expressions for pattern matching during file conversion'''
     # yeah, this is probably overkill as a data structure, but it makes the code read easier when it gets to regexp matching time

@@ -17,3 +17,13 @@ def is_polaris_filename(filename: str) -> bool:
         if re.match(pattern, filename):
             return True
     return False
+
+# Function to determine if a file is a hum. Assume anything starting with
+# "hum" or "HUM" is a hum.
+HUM_REGEX = r"^hum.*$"
+
+def is_hum(filename: str) -> bool:
+    if re.match(HUM_REGEX, filename, re.I):
+        return True
+    else:
+        return False
