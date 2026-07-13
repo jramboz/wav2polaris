@@ -104,19 +104,18 @@ def convert_wav_to_polaris_raw(input: str, output: str | None = None, nxt_trim: 
 
         # Special processing for hum files to avoid NXT lockups.
         # Check whether or not the file is likely safe and warn the user.
+        # User always gets the warning if file is likely unsafe, but fix is
+        # only applied if specifically requested.
         predicted_safe = humfix.check_parity(sound)["predicted_safe"]
         is_hum = utils.is_hum(os.path.basename(output))
         if is_hum and predicted_safe:
             _log.debug("Hum file is likely safe for Anima NXT.")
         elif is_hum and not predicted_safe:
             _log.warning("Hum file is likely to cause problems with Anima NXT.")
-
-        # Apply hum fix if requested and file appears to need it.
-        # This is purposely separate from the hum check above so that you can
-        # apply the fix to any file, if desired, not just hums.
-        if apply_humfix and not predicted_safe:
-            _log.info(f"Applying hum fix to file {input}")
-            sound = humfix.repair_segment(sound)
+            # Apply hum fix if requested.
+            if apply_humfix:
+                _log.info(f"Applying hum fix to file {input}")
+                sound = humfix.repair_segment(sound)
 
         # trim silence from beginning and end
         # sound = trim_edges(sound)
