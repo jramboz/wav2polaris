@@ -490,7 +490,7 @@ jobs:
             --install-location /usr/local/bin \
             --identifier "com.sublunarysphere.wav2polaris" \
             --version ${{ needs.verify.outputs.version }} \
-            --sign ${{ secrets.MACOS_INSTALLER_IDENTITY }} \
+            --sign "${{ secrets.MACOS_INSTALLER_IDENTITY }}" \
             wav2polaris-${{ needs.verify.outputs.version }}-${{ matrix.arch }}.pkg
 
       # - name: Create notarization archive
