@@ -358,6 +358,8 @@ jobs:
             APPLE_ID
             APPLE_APP_SPECIFIC_PASSWORD
             APPLE_TEAM_ID
+            MACOS_INSTALLER_CERTIFICATE_BASE64
+            MACOS_INSTALLER_IDENTITY
           )
 
           for variable in "${required_variables[@]}"; do
@@ -370,12 +372,15 @@ jobs:
       - name: Install Developer ID certificate
         env:
           MACOS_CERTIFICATE_BASE64: ${{ secrets.MACOS_CERTIFICATE_BASE64 }}
+          MACOS_INSTALLER_CERTIFICATE_BASE64: ${{ secrets.MACOS_INSTALLER_CERTIFICATE_BASE64 }}
           MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
           MACOS_KEYCHAIN_PASSWORD: ${{ secrets.MACOS_KEYCHAIN_PASSWORD }}
           MACOS_CODESIGN_IDENTITY: ${{ secrets.MACOS_CODESIGN_IDENTITY }}
+          MACOS_INSTALLER_IDENTITY: ${{ secrets.MACOS_INSTALLER_IDENTITY }}
         shell: bash
         run: |
           CERTIFICATE_PATH="${RUNNER_TEMP}/developer-id-application.p12"
+          INSTALLER_CERTIFICATE_PATH="${RUNNER_TEMP/developer-id-installer.p12}"
           KEYCHAIN_PATH="${RUNNER_TEMP}/app-signing.keychain-db"
 
           echo "CERTIFICATE_PATH=${CERTIFICATE_PATH}" >> "${GITHUB_ENV}"
@@ -383,6 +388,9 @@ jobs:
 
           printf '%s' "${MACOS_CERTIFICATE_BASE64}" |
             base64 --decode -o "${CERTIFICATE_PATH}"
+
+          printf '%s' "${MACOS_INSTALLER_CERTIFICATE_BASE64}" |
+            base64 --decode -o "${INSTALLER_CERTIFICATE_PATH}"
 
           security create-keychain \
             -p "${MACOS_KEYCHAIN_PASSWORD}" \
@@ -403,7 +411,14 @@ jobs:
             -f pkcs12 \
             -k "${KEYCHAIN_PATH}"
 
-          security set-key-partition-list \
+          security import "${INSTALLER_CERTIFICATE_PATH}" \
+            -P "${MACOS_CERTIFICATE_PASSWORD}" \
+            -A \
+            -t cert \
+            -f pkcs12 \
+            -k "${KEYCHAIN_PATH}"
+
+            security set-key-partition-list \
             -S apple-tool:,apple: \
             -k "${MACOS_KEYCHAIN_PASSWORD}" \
             "${KEYCHAIN_PATH}"
@@ -422,6 +437,11 @@ jobs:
             -p codesigning \
             "${KEYCHAIN_PATH}" |
             grep -F -- "${MACOS_CODESIGN_IDENTITY}"
+
+          security find-identity \
+            -v \
+            "${KEYCHAIN_PATH}" |
+            grep -F -- "${MACOS_INSTALLER_IDENTITY}"
 
       - name: Install Python build dependencies
         shell: bash
@@ -468,6 +488,7 @@ jobs:
             --install-location /usr/local/bin \
             --identifier "com.sublunarysphere.wav2polaris" \
             --version ${{ needs.verify.outputs.version }} \
+            --sign ${{ secrets.MACOS_INSTALLER_IDENTITY }}
             wav2polaris-${{ needs.verify.outputs.version }}-${{ matrix.arch }}.pkg
 
       # - name: Create notarization archive
