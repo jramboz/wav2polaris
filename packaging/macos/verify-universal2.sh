@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-APP_PATH="${1:-dist/Tintalle.app}"
+APP_PATH="${1:-dist/wav2polaris}"
 
 if [[ ! -d "${APP_PATH}" ]]; then
     echo "Error: application bundle not found: ${APP_PATH}" >&2
