@@ -382,7 +382,7 @@ jobs:
         shell: bash
         run: |
           CERTIFICATE_PATH="${RUNNER_TEMP}/developer-id-application.p12"
-          INSTALLER_CERTIFICATE_PATH="${RUNNER_TEMP/developer-id-installer.p12}"
+          INSTALLER_CERTIFICATE_PATH="${RUNNER_TEMP}/developer-id-installer.p12}"
           KEYCHAIN_PATH="${RUNNER_TEMP}/app-signing.keychain-db"
 
           echo "CERTIFICATE_PATH=${CERTIFICATE_PATH}" >> "${GITHUB_ENV}"
