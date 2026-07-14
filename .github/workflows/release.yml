@@ -504,38 +504,38 @@ jobs:
       #       dist/wav2polaris \
       #       "${RUNNER_TEMP}/wav2polaris-notarization.zip"
 
-      # - name: Submit application for notarization
-      #   env:
-      #     APPLE_ID: ${{ secrets.APPLE_ID }}
-      #     APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-      #     APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-      #   shell: bash
-      #   run: |
-      #     xcrun notarytool submit \
-      #       "${RUNNER_TEMP}/wav2polaris-notarization.zip" \
-      #       --apple-id "${APPLE_ID}" \
-      #       --password "${APPLE_APP_SPECIFIC_PASSWORD}" \
-      #       --team-id "${APPLE_TEAM_ID}" \
-      #       --wait
+      - name: Submit application for notarization
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        shell: bash
+        run: |
+          xcrun notarytool submit \
+            "wav2polaris-${{ needs.verify.outputs.version }}-${{ matrix.arch }}.pkg" \
+            --apple-id "${APPLE_ID}" \
+            --password "${APPLE_APP_SPECIFIC_PASSWORD}" \
+            --team-id "${APPLE_TEAM_ID}" \
+            --wait
 
-      # - name: Staple and validate notarization ticket
-      #   shell: bash
-      #   run: |
-      #     xcrun stapler staple dist/wav2polaris
-      #     xcrun stapler validate dist/wav2polaris
+      - name: Staple and validate notarization ticket
+        shell: bash
+        run: |
+          xcrun stapler staple wav2polaris-${{ needs.verify.outputs.version }}-${{ matrix.arch }}.pkg
+          xcrun stapler validate wav2polaris-${{ needs.verify.outputs.version }}-${{ matrix.arch }}.pkg
 
-      #     codesign \
-      #       --verify \
-      #       --deep \
-      #       --strict \
-      #       --verbose=2 \
-      #       dist/wav2polaris
+          codesign \
+            --verify \
+            --deep \
+            --strict \
+            --verbose=2 \
+            wav2polaris-${{ needs.verify.outputs.version }}-${{ matrix.arch }}.pkg
 
-      #     spctl \
-      #       --assess \
-      #       --type execute \
-      #       --verbose=4 \
-      #       dist/wav2polaris
+          spctl \
+            --assess \
+            --type execute \
+            --verbose=4 \
+            wav2polaris-${{ needs.verify.outputs.version }}-${{ matrix.arch }}.pkg
 
       # - name: Create final macOS release archive
       #   env:
@@ -570,8 +570,6 @@ jobs:
           if [[ -n "${CERTIFICATE_PATH:-}" ]]; then
             rm -f "${CERTIFICATE_PATH}"
           fi
-
-          rm -f "${RUNNER_TEMP}/wav2polaris-notarization.zip"
 
   bundle:
     name: Prepare release assets
