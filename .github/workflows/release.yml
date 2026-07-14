@@ -437,8 +437,7 @@ jobs:
           pyinstaller \
             --clean \
             --noconfirm \
-            --target-arch ${{ matrix.arch }} \
-            wav2polaris-mac.spec
+            wav2polaris-mac-${{ matrix.arch }}.spec
 
       # - name: Verify Universal2 architectures
       #   shell: bash
