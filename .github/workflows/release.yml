@@ -524,11 +524,8 @@ jobs:
           xcrun stapler staple wav2polaris-${{ needs.verify.outputs.version }}-${{ matrix.arch }}.pkg
           xcrun stapler validate wav2polaris-${{ needs.verify.outputs.version }}-${{ matrix.arch }}.pkg
 
-          codesign \
-            --verify \
-            --deep \
-            --strict \
-            --verbose=2 \
+          pkgutil \
+            --check-signature \
             wav2polaris-${{ needs.verify.outputs.version }}-${{ matrix.arch }}.pkg
 
           spctl \
