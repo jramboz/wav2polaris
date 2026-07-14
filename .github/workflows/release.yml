@@ -571,7 +571,7 @@ jobs:
         if: needs.build-macos.result == 'success'
         uses: actions/download-artifact@v8
         with:
-          name: release-macos-*
+          pattern: release-macos-*
           path: release-assets
 
       - name: Generate checksums
