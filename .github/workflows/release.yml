@@ -306,6 +306,15 @@ jobs:
           retention-days: 14
 
   build-macos:
+    strategy:
+      matrix:
+        # Separate jobs for Intel (x86_64) and Apple Silicon (arm64)
+        include:
+          - os: macos-15
+            arch: arm64
+          - os: macos-15-intel
+            arch: x86_64
+
     name: Build signed and notarized macOS application
     if: >
       (github.event_name == 'push' &&
@@ -314,7 +323,7 @@ jobs:
        github.ref == 'refs/heads/ci-test')
     needs:
       - verify
-    runs-on: macos-15-intel
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 90
 
     steps:
@@ -428,13 +437,14 @@ jobs:
           pyinstaller \
             --clean \
             --noconfirm \
+            --target-arch ${{ matrix.arch }} \
             wav2polaris-mac.spec
 
-      - name: Verify Universal2 architectures
-        shell: bash
-        run: |
-          ./packaging/macos/verify-universal2.sh \
-            dist/wav2polaris
+      # - name: Verify Universal2 architectures
+      #   shell: bash
+      #   run: |
+      #     ./packaging/macos/verify-universal2.sh \
+      #       dist/wav2polaris
 
       - name: Verify Developer ID signature
         shell: bash
@@ -506,14 +516,14 @@ jobs:
             --sequesterRsrc \
             --keepParent \
             dist/wav2polaris \
-            "dist/wav2polaris-${RELEASE_VERSION}-macos-universal2.zip"
+            "dist/wav2polaris-${{ matrix.arch }}-${RELEASE_VERSION}-macos-universal2.zip"
 
       - name: Upload macOS release asset
         uses: actions/upload-artifact@v6
         with:
           name: release-macos
           path: >-
-            dist/wav2polaris-${{ needs.verify.outputs.version }}-macos-universal2.zip
+            dist/wav2polaris-${{ matrix.arch }}-${{ needs.verify.outputs.version }}-macos-universal2.zip
           if-no-files-found: error
           retention-days: 14
 
