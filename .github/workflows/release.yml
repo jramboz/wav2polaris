@@ -533,7 +533,7 @@ jobs:
 
           spctl \
             --assess \
-            --type execute \
+            --type install \
             --verbose=4 \
             wav2polaris-${{ needs.verify.outputs.version }}-${{ matrix.arch }}.pkg
 
