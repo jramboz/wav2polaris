@@ -546,11 +546,11 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: Download Linux asset
-        uses: actions/download-artifact@v8
-        with:
-          name: release-linux
-          path: release-assets
+      # - name: Download Linux asset
+      #   uses: actions/download-artifact@v8
+      #   with:
+      #     name: release-linux
+      #     path: release-assets
 
       - name: Download Windows asset
         uses: actions/download-artifact@v8
