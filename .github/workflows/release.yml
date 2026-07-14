@@ -573,6 +573,7 @@ jobs:
         with:
           pattern: release-macos-*
           path: release-assets
+          merge-multiple: true
 
       - name: Generate checksums
         shell: bash
