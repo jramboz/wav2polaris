@@ -314,7 +314,7 @@ jobs:
        github.ref == 'refs/heads/ci-test')
     needs:
       - verify
-    runs-on: macos-15-intel
+    runs-on: macos-15
     timeout-minutes: 90
 
     steps:
