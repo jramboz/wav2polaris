@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['src\\wav2polaris\\wav2polaris.py'],
+    ['src\\wav2polaris\\app.py'],
     pathex=['src/wav2polaris'],
     binaries=[],
     datas=[],
