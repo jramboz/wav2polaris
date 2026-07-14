@@ -1,8 +1,14 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import os
+
+
+codesign_identity = os.environ.get("MACOS_CODESIGN_IDENTITY")
+entitlements_file = os.environ.get("MACOS_ENTITLEMENTS_FILE")
+
 
 a = Analysis(
-    ['src/wav2polaris/wav2polaris.py'],
+    ['src/wav2polaris/app.py'],
     pathex=['src/wav2polaris'],
     binaries=[],
     datas=[],
@@ -22,7 +28,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='wav2polaris-arm64',
+    name='wav2polaris',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -32,8 +38,8 @@ exe = EXE(
     console=True,
     disable_windowed_traceback=False,
     argv_emulation=False,
-    target_arch=None,
-    codesign_identity=None,
-    entitlements_file=None,
+    target_arch="x86_64",
+    codesign_identity=codesign_identity,
+    entitlements_file=entitlements_file,
     icon=['wav2polaris.png'],
 )
