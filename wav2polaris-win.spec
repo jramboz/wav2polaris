@@ -1,5 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
-from .src.wav2polaris.app import script_version
+script_version = "0.5.0"
 
 a = Analysis(
     ['src\\wav2polaris\\app.py'],
@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name=f'wav2polaris-{script_version.removeprefix("v")}',
+    name=f'wav2polaris-{script_version}',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
