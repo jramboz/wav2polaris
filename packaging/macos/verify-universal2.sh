@@ -4,7 +4,7 @@ set -euo pipefail
 
 APP_PATH="${1:-dist/wav2polaris}"
 
-if [[ ! -d "${APP_PATH}" ]]; then
+if [[ ! -f "${APP_PATH}" ]]; then
     echo "Error: application bundle not found: ${APP_PATH}" >&2
     exit 1
 fi
@@ -19,7 +19,7 @@ while IFS= read -r -d '' file_path; do
 
     mach_o_count=$((mach_o_count + 1))
     architectures="$(lipo -archs "${file_path}" 2>/dev/null || true)"
-    relative_path="${file_path#"${APP_PATH}"/}"
+    relative_path="${file_path#"${APP_PATH}"}"
 
     printf '%-90s %s\n' \
         "${relative_path}" \
