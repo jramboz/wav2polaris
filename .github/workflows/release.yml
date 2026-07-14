@@ -8,24 +8,6 @@ on:
   pull_request:
     branches:
       - main
-    # paths:
-    #   - ".github/workflows/release.yml"
-    #   - "app.py"
-    #   - "requirements.txt"
-    #   - "build-requirements.txt"
-    #   - "tintalle-win.spec"
-    #   - "tintalle-linux.spec"
-    #   - "tintalle-mac.spec"
-    #   - "tintalle.iss"
-    #   - ".bumpversion.cfg"
-    #   - "version_compare.py"
-    #   - "update_checker.py"
-    #   - "tests/**"
-    #   - "packaging/linux/**"
-    #   - "packaging/macos/**"
-    #   - "translations/**"
-    #   - "img/**"
-    #   - "OpenCore_OEM/**"
 
   workflow_dispatch:
     inputs:
@@ -243,7 +225,7 @@ jobs:
   #         retention-days: 14
 
   build-windows:
-    name: Build Windows installer
+    name: Build Windows executable
     needs:
       - verify
 
@@ -277,7 +259,7 @@ jobs:
             --noconfirm `
             wav2polaris-win.spec
 
-      - name: Verify Windows exe
+      - name: Verify Windows executable
         env:
           RELEASE_VERSION: ${{ needs.verify.outputs.version }}
         shell: pwsh
@@ -315,7 +297,7 @@ jobs:
           - os: macos-15-intel
             arch: x86_64
 
-    name: Build signed and notarized macOS application
+    name: Build signed and notarized macOS installer
     if: >
       (github.event_name == 'push' &&
        startsWith(github.ref, 'refs/tags/v')) ||
@@ -451,7 +433,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r build-requirements.txt
 
-      - name: Build signed macOS application
+      - name: Build signed macOS binary
         env:
           MACOS_CODESIGN_IDENTITY: ${{ secrets.MACOS_CODESIGN_IDENTITY }}
         shell: bash
@@ -482,7 +464,7 @@ jobs:
             --verbose=4 \
             dist/wav2polaris 2>&1
 
-      - name: Create pkg installer
+      - name: Create installer pkg
         shell: bash
         run: |
           pkgbuild \
