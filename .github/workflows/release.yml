@@ -460,6 +460,16 @@ jobs:
             --verbose=4 \
             dist/wav2polaris 2>&1
 
+      - name: Create pkg installer
+        shell: bash
+        run: |
+          pkgbuild \
+            --root ./dist \
+            --install-location /usr/local/bin \
+            --identifier "com.sublunarysphere.wav2polaris" \
+            --version ${{ needs.verify.outputs.version }} \
+            wav2polaris-${{ needs.verify.outputs.version }}-${{ matrix.arch }}.pkg
+
       # - name: Create notarization archive
       #   shell: bash
       #   run: |
@@ -504,25 +514,25 @@ jobs:
       #       --verbose=4 \
       #       dist/wav2polaris
 
-      - name: Create final macOS release archive
-        env:
-          RELEASE_VERSION: ${{ needs.verify.outputs.version }}
-        shell: bash
-        run: |
-          ditto \
-            -c \
-            -k \
-            --sequesterRsrc \
-            --keepParent \
-            dist/wav2polaris \
-            "dist/wav2polaris-${{ matrix.arch }}-${RELEASE_VERSION}-macos-universal2.zip"
+      # - name: Create final macOS release archive
+      #   env:
+      #     RELEASE_VERSION: ${{ needs.verify.outputs.version }}
+      #   shell: bash
+      #   run: |
+      #     ditto \
+      #       -c \
+      #       -k \
+      #       --sequesterRsrc \
+      #       --keepParent \
+      #       dist/wav2polaris \
+      #       "dist/wav2polaris-${{ matrix.arch }}-${RELEASE_VERSION}-macos-universal2.zip"
 
       - name: Upload macOS release asset
         uses: actions/upload-artifact@v6
         with:
           name: release-macos-${{ matrix.arch }}
           path: >-
-            dist/wav2polaris-${{ matrix.arch }}-${{ needs.verify.outputs.version }}-macos-universal2.zip
+            wav2polaris-${{ needs.verify.outputs.version }}-${{ matrix.arch }}.pkg
           if-no-files-found: error
           retention-days: 14
 
