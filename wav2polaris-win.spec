@@ -1,5 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
-from wav2polaris.app import script_version
+from .src.wav2polaris.app import script_version
 
 a = Analysis(
     ['src\\wav2polaris\\app.py'],
